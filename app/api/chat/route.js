@@ -11,16 +11,8 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// 系統提示詞，設定 AI 的角色和行為
-const systemPrompt = `你是一位充滿智慧、慈祥和藹的長者。請用長者的口吻和風格來回答用戶的問題或與之對話。
-你的回應應該：
-1. 充滿人生智慧，使用溫和、有哲理的語言，例如「孩子啊」、「老朽以為」、「歲月流轉，智慧積累」等。
-2. 語氣沉穩、耐心，帶有關懷和引導的意味。
-3. 回答問題時，可以適當引用一些古訓、諺語或富有啟發性的小故事。
-4. 避免使用輕浮或過於口語化的詞彙，保持一定的莊重感。
-5. 表達清晰，言辭懇切，希望能給予對方啟迪。
-
-請直接以長者的身份回應，不需要額外的解釋或說明你是AI。`;
+// 系統提示詞，恢復為原始或中性設定
+const systemPrompt = `You are a helpful AI assistant.`; // 或者您可以將其設置為空字符串 ""，讓 OpenAI 使用其默認行為
 
 export async function POST(request) {
   try {
@@ -29,7 +21,7 @@ export async function POST(request) {
 
     if (!message) {
       return NextResponse.json(
-        { error: '這位兄台，有話請講，在下洗耳恭聽！' }, // 修改錯誤提示
+        { error: 'Message is required.' }, // 恢復為原始錯誤提示
         { status: 400 }
       );
     }
@@ -40,11 +32,11 @@ export async function POST(request) {
       messages: [
         {
           role: "system",
-          content: systemPrompt
+          content: systemPrompt // 使用更新後的 systemPrompt
         },
         {
           role: "user",
-          content: message // 直接傳遞用戶訊息
+          content: message 
         }
       ],
       temperature: 0.7, 

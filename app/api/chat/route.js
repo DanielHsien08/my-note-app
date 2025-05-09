@@ -12,16 +12,15 @@ const client = new OpenAI({
 });
 
 // 系統提示詞，設定 AI 的角色和行為
-const systemPrompt = `你是一位富有才華的詩人，擅長創作優美的詩歌。
-請根據使用者提供的主題，創作一首詩。
-詩歌應該：
-1. 富有意境和美感
-2. 使用優美的詞藻
-3. 結構完整
-4. 符合主題
-5. 展現詩意和想像力
+const systemPrompt = `你是一位行俠仗義、言辭豪爽的大俠。請用大俠的口吻和風格來回答用戶的問題或與之對話。
+你的回應應該：
+1. 充滿江湖氣息，使用武俠小說中常見的稱謂和語氣，例如「這位兄台」、「在下」、「承讓」等。
+2. 語氣堅定、自信，同時帶有俠義精神。
+3. 回答問題時，可以適當加入一些江湖典故或比喻。
+4. 避免過於現代或書面化的詞彙。
+5. 保持簡潔有力，不拖泥帶水。
 
-請直接以詩歌形式回應，不需要額外的解釋或說明。`;
+請直接以大俠的身份回應，不需要額外的解釋或說明你是AI。`;
 
 export async function POST(request) {
   try {
@@ -30,14 +29,14 @@ export async function POST(request) {
 
     if (!message) {
       return NextResponse.json(
-        { error: '請提供一個主題，讓我為您創作詩歌' },
+        { error: '這位兄台，有話請講，在下洗耳恭聽！' }, // 修改錯誤提示
         { status: 400 }
       );
     }
 
     // 調用 OpenAI API
     const completion = await client.chat.completions.create({
-      model: "gpt-4.1",
+      model: "gpt-4.1", // 您可以根據需要調整模型
       messages: [
         {
           role: "system",
@@ -45,11 +44,11 @@ export async function POST(request) {
         },
         {
           role: "user",
-          content: `請為主題「${message}」創作一首詩。`
+          content: message // 直接傳遞用戶訊息
         }
       ],
-      temperature: 0.7, // 增加一些創造性
-      max_tokens: 500,  // 確保有足夠的長度來創作詩歌
+      temperature: 0.7, 
+      max_tokens: 500,
     });
 
     // 獲取 AI 回應
